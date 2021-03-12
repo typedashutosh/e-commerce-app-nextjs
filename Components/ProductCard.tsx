@@ -8,7 +8,7 @@ type CardProps = {
   details: string
   anchor: string
 }
-const Card: FC<CardProps> = ({ anchor, details, title, imgSrc }: CardProps): JSX.Element => {
+const Card: FC<CardProps> = ({ anchor, details, title, imgSrc }: CardProps) => {
   return (
     <div className='card-container'>
       <Link href={anchor}>
