@@ -1,5 +1,7 @@
+import Link from 'next/link'
+
 const index = () => {
-  return <div>This is index page</div>
+  return <Link href='/newpage'>newpage</Link>
 }
 
 export default index
