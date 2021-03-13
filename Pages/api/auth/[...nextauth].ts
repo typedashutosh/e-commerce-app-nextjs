@@ -1,15 +1,11 @@
+import { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
+import { createSecretKey } from 'node:crypto'
 
-NextAuth({
-  providers: [
-    // Providers.GitHub({
-    // clientId: process.env.GITHUB_ID,
-    // clientSecret: process.env.GITHUB_SECRET
-    // })
-  ],
-  database: {
-    type: 'mongodb',
-    database: process.env.MONGODB_URI
-  }
-})
+const options = {
+  providers: [Providers.Email({})],
+  database: process.env.MONGODB_URI
+}
+
+export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options)
