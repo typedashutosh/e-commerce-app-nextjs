@@ -2,13 +2,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FC } from 'react'
 
-type CardProps = {
+type TCardProps = {
   imgSrc: string
   title: string
   details: string
   anchor: string
 }
-export const Card: FC<CardProps> = ({ anchor, details, title, imgSrc }: CardProps) => {
+export const Card: FC<TCardProps> = ({ anchor, details, title, imgSrc }: TCardProps): JSX.Element => {
   return (
     <div className='card'>
       <Image height={50} width={70} src={imgSrc} className='' />

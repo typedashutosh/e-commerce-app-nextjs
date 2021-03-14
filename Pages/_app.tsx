@@ -5,11 +5,9 @@ import { Provider } from 'next-auth/client'
 
 const _app = ({ Component, pageProps }: AppProps) => {
   return (
-    <div className='mx-4 my-2'>
-      <Provider session={pageProps.session}>
-        <Component {...pageProps} />
-      </Provider>
-    </div>
+    <Provider session={pageProps.session}>
+      <Component {...pageProps} />
+    </Provider>
   )
 }
 
