@@ -1,7 +1,13 @@
-import Link from 'next/link'
+import Header from '../Components/Header'
+import * as ProductCard from '../Components/ProductCard'
 
 const index = () => {
-  return <Link href='/newpage'>newpage</Link>
+  return (
+    <>
+      <Header />
+      <ProductCard.Skeleton />
+    </>
+  )
 }
 
 export default index

@@ -8,18 +8,32 @@ type CardProps = {
   details: string
   anchor: string
 }
-const Card: FC<CardProps> = ({ anchor, details, title, imgSrc }: CardProps) => {
+export const Card: FC<CardProps> = ({ anchor, details, title, imgSrc }: CardProps) => {
   return (
-    <div className='card-container'>
+    <div className='card'>
+      <Image height={50} width={70} src={imgSrc} className='' />
+      <div className='title text-xl font-semibold'>{title}</div>
+      <div className='details'>{details}</div>
       <Link href={anchor}>
-        <div className='card'>
-          <Image height={50} width={70} src={imgSrc} className='' />
-          <div className='title'>{title}</div>
-          <div className='details'>{details}</div>
-        </div>
+        <a className='absolute bottom-2 rounded-full px-2 py-1 bg-red-300 hover:bg-red-400 shadow-sm transition-all duration-200 hover:shadow-md text-sm cursor-pointer'>
+          Buy now
+        </a>
       </Link>
     </div>
   )
 }
 
-export default Card
+export const Skeleton: FC<{}> = (): JSX.Element => {
+  return (
+    <div className='animate-pulse relative card h-72 w-60 m-2 p-2 rounded-md hover:shadow-lg transiiton-all duration-200 bg-white shadow-md '>
+      <div className='image h-1/2 bg-gray-200 rounded-sm'></div>
+      <div className='h-4 w-1/2 bg-gray-200 my-2 rounded-sm'></div>
+      <div className='details '>
+        <div className='h-2 my-1.5 w-full bg-gray-200 rounded-sm'></div>
+        <div className='h-2 my-1.5 w-full bg-gray-200 rounded-sm'></div>
+        <div className='h-2 my-1.5 w-full bg-gray-200 rounded-sm'></div>
+      </div>
+      <a className='absolute bottom-3 rounded-full px-2 py-1 bg-gray-200 h-6 w-16'></a>
+    </div>
+  )
+}
