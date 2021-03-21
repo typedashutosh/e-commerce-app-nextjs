@@ -3,8 +3,7 @@ declare global {
     interface ProcessEnv {
       JWT_SECRET: string
       MONGODB_URI: string
-      GITHUB_ID: string
-      GITHUB_SECRET: string
+      NEXTAUTH_URL: string
     }
   }
 }
