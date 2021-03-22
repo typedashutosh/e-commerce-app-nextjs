@@ -1,10 +1,11 @@
-import { ChangeEvent } from 'mongodb'
 import { NextPage, NextPageContext } from 'next'
 import { FormEvent, useState } from 'react'
+import { csrfToken } from 'next-auth/client'
+import Router from 'next/router'
 
-type TnewUser = {}
+type TnewUser = { csrfToken: string | null }
 
-const newUser: NextPage<TnewUser> = (): JSX.Element => {
+const newUser: NextPage<TnewUser> = ({ csrfToken }): JSX.Element => {
   const [firstname, setFirstname] = useState<string>('')
   const [lastname, setLastname] = useState<string>('')
   const [username, setUsername] = useState<string>('')
@@ -16,9 +17,11 @@ const newUser: NextPage<TnewUser> = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
+
     setFirstnameError('')
     setUsernameError('')
     setpasswordError('')
+
     fetch('/api/auth/newUser', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,11 +29,29 @@ const newUser: NextPage<TnewUser> = (): JSX.Element => {
     })
       .then((res) => res.json())
       .then((data) => {
-        data.errors.forEach((err: any) => {
-          if (err.path === 'firstname') setFirstnameError(err.message)
-          if (err.path === 'username') setUsernameError(err.message)
-          if (err.path === 'password') setpasswordError(err.message)
-        })
+        if (data.success) {
+          fetch('/api/auth/callback/credentials', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              csrfToken,
+              username: data.username,
+              password: data.password
+            })
+          })
+            .then((res) => Router.push(res.url))
+            .catch((err) => console.log({ err }))
+        } else {
+          data.errors.forEach((err: any) => {
+            if (!!err.path) {
+              if (err.path === 'firstname') setFirstnameError(err.message)
+              if (err.path === 'username') setUsernameError(err.message)
+              if (err.path === 'password') setpasswordError(err.message)
+            } else {
+              setUsernameError(err.message)
+            }
+          })
+        }
       })
       .catch((err: any) => console.log(err))
   }
@@ -49,6 +70,7 @@ const newUser: NextPage<TnewUser> = (): JSX.Element => {
               setFirstname(e.target.value)
             }}
           />
+          {firstnameError}
         </label>
         <label htmlFor='lastname'>
           Lastname
@@ -69,6 +91,7 @@ const newUser: NextPage<TnewUser> = (): JSX.Element => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+          {usernameError}
         </label>
         <label htmlFor='password'>
           Password
@@ -81,6 +104,7 @@ const newUser: NextPage<TnewUser> = (): JSX.Element => {
               setPassword(e.target.value)
             }}
           />
+          {passwordError}
         </label>
         <button type='submit'>Signup</button>
       </form>
@@ -88,7 +112,9 @@ const newUser: NextPage<TnewUser> = (): JSX.Element => {
   )
 }
 
-//newUser.getInitialProps = async (context: NextPageContext) => {
-//  return {}
-//}
+newUser.getInitialProps = async (context: NextPageContext) => {
+  return {
+    csrfToken: await csrfToken(context)
+  }
+}
 export default newUser

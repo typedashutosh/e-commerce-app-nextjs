@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import NextAuth, { User } from 'next-auth'
+import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
-import UserModel, { Iuser } from '../../../Models/User.model'
+import UserModel, { IUser } from '../../../Models/User.model'
 import dbConnect from '../../../utils/dbConnect'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -18,25 +18,37 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             },
             password: {
               label: 'Password',
-              placeholder: 'password',
-              type: 'text'
+              type: 'text',
+              placeholder: 'password'
             }
           },
-          async authorize(
-            credentials: Record<string, string>
-          ): Promise<Iuser | null> {
-            // console.log({ credentials })
-            // dbConnect()
-            // UserModel.find({username, password})
-            // return user
-            return null //-need to work on this
+          async authorize(credentials): Promise<IUser | null> {
+            dbConnect()
+            const user: IUser = await UserModel.findOne({
+              username: credentials.username,
+              password: credentials.password
+            })
+            return !!user._id ? user : null
           }
         })
       ],
+      database: undefined,
+      secret: process.env.SECRET,
+      session: {
+        jwt: true,
+        maxAge: 30 * 24 * 60 * 60,
+        updateAge: 24 * 60 * 60
+      },
+      jwt: {
+        maxAge: 24 * 60 * 60,
+        encryption: true,
+        secret: process.env.JWT_SECRET
+        // signingKey: process.env.JWT_SIGNING_KEY,
+        // encryptionKey: process.env.JWT_ENCRYPTION_KEY
+      },
       callbacks: {
         async signIn(user, account, profile): Promise<string | boolean> {
-          console.log({ user, account, profile })
-          return true
+          return !!user
         },
         async redirect(url, baseUrl) {
           return url
@@ -53,15 +65,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       pages: {
         signIn: '/signin',
-        newUser: '/signin',
-        signOut: '/signout'
-      },
-      jwt: {
-        maxAge: 24 * 60 * 60,
-        encryption: true,
-        secret: process.env.JWT_SECRET
-      },
-      session: { jwt: true }
+        newUser: '/',
+        error: '/signin'
+        // signOut: '/signout'
+      }
     })
   })
 }

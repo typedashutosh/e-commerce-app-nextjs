@@ -7,15 +7,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     dbConnect()
     const user = req.body
     UserModel.create(user)
-      .then((user) => console.log(user))
+      .then((user) =>
+        res.status(201).json({
+          success: true,
+          username: user.username,
+          password: user.password
+        })
+      )
       .catch((err) => {
-        if (err._message.includes('User validation failed')) {
+        if (err.code === 11000) {
+          res
+            .status(406)
+            .json({ errors: [{ message: 'Username already taken' }] })
+        } else if (err._message.includes('User validation failed')) {
           let errors: Object[] = []
           Object.values(err.errors).forEach((error: any) => {
             const { properties } = error
             errors.push(properties)
           })
-          res.json({ errors })
+          res.status(406).json({ errors })
         }
       })
   })
