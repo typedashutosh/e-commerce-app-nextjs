@@ -14,6 +14,7 @@ const SignIn: NextPage<TSignIn> = ({ csrfToken }): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoginerror('')
     fetch('api/auth/callback/credentials', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -42,9 +42,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       jwt: {
         maxAge: 24 * 60 * 60,
         encryption: true,
-        secret: process.env.JWT_SECRET
-        // signingKey: process.env.JWT_SIGNING_KEY,
-        // encryptionKey: process.env.JWT_ENCRYPTION_KEY
+        secret: process.env.JWT_SECRET,
+        signingKey: process.env.JWT_SIGNING_KEY,
+        encryptionKey: process.env.JWT_ENCRYPTION_KEY
       },
       callbacks: {
         async signIn(user, account, profile): Promise<string | boolean> {
