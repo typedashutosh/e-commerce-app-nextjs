@@ -22,7 +22,7 @@ const newUser: NextPage<TnewUser> = ({ csrfToken }): JSX.Element => {
     setUsernameError('')
     setpasswordError('')
 
-    fetch('/api/auth/newUser', {
+    fetch('/api/auth/new_user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ firstname, lastname, username, password })

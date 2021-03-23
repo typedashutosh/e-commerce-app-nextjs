@@ -1,24 +1,40 @@
-import { FC } from 'react'
+import { FC, ReactElement } from 'react'
+import {
+  AppBar,
+  Container,
+  IconButton,
+  Toolbar,
+  Typography,
+  Button
+} from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
+import { signIn } from 'next-auth/client'
+import Link from 'next/link'
 
-const Header: FC<{}> = (): JSX.Element => {
+interface IHeader {}
+
+const Header: FC<IHeader> = (): ReactElement => {
   return (
-    <header className='mt-2 mb-4'>
-      <span className='logo text-3xl mx-4'>E-Comm</span>
-      <input
-        className='w-60 shadow-md focus:shadow-lg hover:shadow-lg px-4 py-2 outline-none rounded-sm transition-all duration-200'
-        type='text'
-        name='search'
-        id='search'
-        placeholder='Search everywhere...'
-      />
-      <button className='menuBtn sm:hidden block fixed h-14 w-14 rounded-full bottom-8 right-8 bg-gray-800 cursor-pointer z-50'>
-        <div className='flex flex-col justify-evenly h-7 w-7 absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2'>
-          <div className='w-7 h-1 bg-white'></div>
-          <div className='w-7 h-1 bg-white'></div>
-        </div>
-      </button>
-      <nav></nav>
-    </header>
+    <div>
+      <AppBar>
+        <Toolbar>
+          <IconButton>
+            <MenuIcon style={{ color: 'white' }} />
+          </IconButton>
+          <Typography style={{ marginRight: 'auto' }}>E-Comm</Typography>
+          <Button
+            onClick={() => {
+              signIn()
+            }}
+          >
+            Login
+          </Button>
+          <Link href='/new_user'>
+            <Button>Register</Button>
+          </Link>
+        </Toolbar>
+      </AppBar>
+    </div>
   )
 }
 
