@@ -32,8 +32,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           }
         })
       ],
-      database: undefined,
-      secret: process.env.SECRET,
+      //database: undefined,
+      //secret: process.env.SECRET,
       session: {
         jwt: true,
         maxAge: 30 * 24 * 60 * 60,
@@ -48,20 +48,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       callbacks: {
         async signIn(user, account, profile): Promise<string | boolean> {
+          // console.log({ user, account, profile })
           return !!user
         },
         async redirect(url, baseUrl) {
+          // console.log({ url, baseUrl })
           return url
+        },
+        async session(session, user) {
+          // console.log({ session, user })
+          session.user = user
+          return session
+        },
+        async jwt(token, user, account, profile, isNewUser) {
+          // console.log({ token })
+          user && (token.user = user)
+          return token
         }
-
-        // async session(session, user) {
-        //   console.log({ session, user })
-        //   return session
-        // },
-        // async jwt(token, user, account, profile, isNewUser) {
-        //   console.log({ token, user, account, profile, isNewUser })
-        //   return token
-        // }
       },
       pages: {
         signIn: '/signin',

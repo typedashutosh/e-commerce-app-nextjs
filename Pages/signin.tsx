@@ -1,5 +1,5 @@
 import { NextPage, NextPageContext } from 'next'
-import { csrfToken } from 'next-auth/client'
+import { csrfToken, getSession, useSession } from 'next-auth/client'
 import { FormEvent, useState } from 'react'
 import Router from 'next/router'
 
@@ -53,8 +53,15 @@ const SignIn: NextPage<TSignIn> = ({ csrfToken }): JSX.Element => {
 }
 
 SignIn.getInitialProps = async (context: NextPageContext) => {
-  //-  const { req, res } = context
-  //-  console.log(req)
+  const session = await getSession(context)
+  session &&
+    context.res
+      ?.writeHead(302, 'User found', {
+        Location: `${process.env.NEXTAUTH_URL}`
+      })
+      .end()
+  //-This doesn't work when requesting http://locallhost:5500/signin from browser
+  //- need to fix this
   return {
     csrfToken: await csrfToken(context)
   }

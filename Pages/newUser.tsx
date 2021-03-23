@@ -1,7 +1,7 @@
-import { NextPage, NextPageContext } from 'next'
 import { FormEvent, useState } from 'react'
-import { csrfToken } from 'next-auth/client'
+import { csrfToken, getSession } from 'next-auth/client'
 import Router from 'next/router'
+import { NextPage, NextPageContext } from 'next'
 
 type TnewUser = { csrfToken: string | null }
 
@@ -113,8 +113,16 @@ const newUser: NextPage<TnewUser> = ({ csrfToken }): JSX.Element => {
 }
 
 newUser.getInitialProps = async (context: NextPageContext) => {
+  const session = await getSession(context)
+  session &&
+    context.res
+      ?.writeHead(302, 'User found', {
+        Location: `${process.env.NEXTAUTH_URL}`
+      })
+      .end()
   return {
     csrfToken: await csrfToken(context)
   }
 }
+
 export default newUser
