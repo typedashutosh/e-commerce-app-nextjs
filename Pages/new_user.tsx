@@ -1,16 +1,43 @@
-import { FormEvent, useState } from 'react'
+import { FC, FormEvent, useState } from 'react'
 import { csrfToken, getSession } from 'next-auth/client'
 import Router from 'next/router'
-import { NextPage, NextPageContext } from 'next'
+import { GetServerSideProps } from 'next'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  makeStyles,
+  TextField,
+  Typography
+} from '@material-ui/core'
 
-type TnewUser = { csrfToken: string | null }
+interface InewUser {
+  csrfToken: string | null
+  session: boolean
+}
 
-const newUser: NextPage<TnewUser> = ({ csrfToken }): JSX.Element => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      csrfToken: await csrfToken(context),
+      session: Boolean(await getSession(context))
+    }
+  }
+}
+
+const useStyles = makeStyles({
+  loading: {}
+})
+
+const newUser: FC<InewUser> = ({ csrfToken, session }): JSX.Element => {
+  typeof window !== 'undefined' && session && Router.push('/')
+
+  const classes = useStyles()
   const [firstname, setFirstname] = useState<string>('')
   const [lastname, setLastname] = useState<string>('')
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-
   const [firstnameError, setFirstnameError] = useState<string>('')
   const [usernameError, setUsernameError] = useState<string>('')
   const [passwordError, setpasswordError] = useState<string>('')
@@ -55,74 +82,96 @@ const newUser: NextPage<TnewUser> = ({ csrfToken }): JSX.Element => {
       })
       .catch((err: any) => console.log(err))
   }
+
   return (
-    <div>
-      Sign Up:
-      <form onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}>
-        <label htmlFor='firstname'>
-          Firstname
-          <input
-            type='text'
-            name='firstname'
-            id='firstname'
-            value={firstname}
-            onChange={(e) => {
-              setFirstname(e.target.value)
-            }}
-          />
-          {firstnameError}
-        </label>
-        <label htmlFor='lastname'>
-          Lastname
-          <input
-            type='text'
-            name='lastname'
-            id='lastname'
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-          />
-        </label>
-        <label htmlFor='username'>
-          Username
-          <input
-            type='text'
-            name='username'
-            id='username'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          {usernameError}
-        </label>
-        <label htmlFor='password'>
-          Password
-          <input
-            type='text'
-            name='password'
-            id='password'
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-          />
-          {passwordError}
-        </label>
-        <button type='submit'>Signup</button>
-      </form>
-    </div>
+    <>
+      {session && (
+        <Container>
+          <CircularProgress className={classes.loading} />
+        </Container>
+      )}
+      {!session && (
+        <Container>
+          <Typography variant='h2'>Register</Typography>
+          <form
+            autoComplete='off'
+            onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}
+          >
+            <Box
+              margin='auto'
+              maxWidth='25rem'
+              display='flex'
+              flexDirection='column'
+            >
+              <TextField
+                margin='normal'
+                color='primary'
+                variant='outlined'
+                label='Firstname'
+                autoComplete='off'
+                required
+                value={firstname}
+                onChange={(e) => {
+                  setFirstname(e.target.value)
+                }}
+              />
+              {firstnameError}
+              <TextField
+                margin='normal'
+                color='primary'
+                variant='outlined'
+                autoComplete='off'
+                label='Lastname'
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+              />
+              <TextField
+                margin='normal'
+                color='primary'
+                variant='outlined'
+                autoComplete='off'
+                required
+                label='Username'
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                error={!!usernameError}
+                helperText={usernameError}
+              />
+              <TextField
+                margin='normal'
+                color='primary'
+                variant='outlined'
+                autoComplete='off'
+                required
+                label='Password'
+                type='password'
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                }}
+              />
+              <Button variant='contained' color='primary' type='submit'>
+                Signup
+              </Button>
+            </Box>
+          </form>
+        </Container>
+      )}
+    </>
   )
 }
 
-newUser.getInitialProps = async (context: NextPageContext) => {
-  const session = await getSession(context)
-  session &&
-    context.res
-      ?.writeHead(302, 'User found', {
-        Location: `${process.env.NEXTAUTH_URL}`
-      })
-      .end()
-  return {
-    csrfToken: await csrfToken(context)
-  }
-}
+//newUser.getInitialProps = async (context: NextPageContext) => {
+//  const session = await getSession(context)
+//  session &&
+//    context.res
+//      ?.writeHead(302, 'User found', {
+//        Location: `${process.env.NEXTAUTH_URL}`
+//      })
+//      .end()
+//  return {
+//    csrfToken: await csrfToken(context)
+//  }
+//}
 
 export default newUser

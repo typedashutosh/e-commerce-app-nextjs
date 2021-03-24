@@ -1,14 +1,17 @@
-import { AppProps } from 'next/dist/next-server/lib/router/router'
+import { AppProps } from 'next/app'
 import '../Styles/global.css'
-import { Provider } from 'next-auth/client'
-import { FC, ReactElement, useEffect } from 'react'
+import { Provider, Session } from 'next-auth/client'
+import { ReactElement, useEffect } from 'react'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
-import theme from '../src/theme'
+import theme from '../utils/theme'
 import { Layout } from '../Components'
+import { NextPage } from 'next'
 
-interface T_app extends AppProps {}
+interface I_app extends AppProps {
+  session?: Session | null
+}
 
-const _app: FC<T_app> = ({ Component, pageProps }): ReactElement => {
+const _app: NextPage<I_app> = ({ Component, pageProps }): ReactElement => {
   useEffect(() => {
     const jssStyles = document?.querySelector('#jss-server-side')
     jssStyles?.parentElement?.removeChild(jssStyles)
@@ -25,4 +28,10 @@ const _app: FC<T_app> = ({ Component, pageProps }): ReactElement => {
   )
 }
 
+//_app.getInitialProps = async (context: NextPageContext) => {
+//  const session = await getSession(context)
+//
+//  return { session }
+//}
+//
 export default _app

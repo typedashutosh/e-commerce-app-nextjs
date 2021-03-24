@@ -1,15 +1,18 @@
-import { Container } from '@material-ui/core'
+import { Session } from 'next-auth/client'
 import { FC, ReactElement } from 'react'
 import Header from './Header'
 
-interface ILayout {}
+interface ILayout {
+  children: ReactElement
+  session?: Session | null
+}
 
 const Layout: FC<ILayout> = ({ children }): ReactElement => {
   return (
-    <Container>
+    <div>
       <Header />
       {children}
-    </Container>
+    </div>
   )
 }
 

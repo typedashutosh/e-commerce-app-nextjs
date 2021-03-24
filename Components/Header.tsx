@@ -1,40 +1,60 @@
 import { FC, ReactElement } from 'react'
 import {
   AppBar,
-  Container,
   IconButton,
   Toolbar,
   Typography,
-  Button
+  Button,
+  makeStyles
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import { signIn } from 'next-auth/client'
+import { signOut, Session, useSession } from 'next-auth/client'
 import Link from 'next/link'
 
-interface IHeader {}
+interface IHeader {
+  session?: Session | null
+}
+
+const useStyles = makeStyles({
+  title: {
+    marginRight: 'auto',
+    cursor: 'pointer'
+  }
+})
 
 const Header: FC<IHeader> = (): ReactElement => {
+  const classes = useStyles()
+  const [session, loading] = useSession()
   return (
-    <div>
-      <AppBar>
-        <Toolbar>
-          <IconButton>
-            <MenuIcon style={{ color: 'white' }} />
-          </IconButton>
-          <Typography style={{ marginRight: 'auto' }}>E-Comm</Typography>
+    <AppBar position='sticky'>
+      <Toolbar>
+        <IconButton>
+          <MenuIcon style={{ color: 'white' }} />
+        </IconButton>
+        <Link href='/'>
+          <Typography className={classes.title}>E-Comm</Typography>
+        </Link>
+        {!!session && (
           <Button
             onClick={() => {
-              signIn()
+              signOut()
             }}
           >
-            Login
+            Logout
           </Button>
-          <Link href='/new_user'>
-            <Button>Register</Button>
-          </Link>
-        </Toolbar>
-      </AppBar>
-    </div>
+        )}
+        {!session && (
+          <>
+            <Link href='/signin'>
+              <Button>Login</Button>
+            </Link>
+            <Link href='/new_user'>
+              <Button>Register</Button>
+            </Link>
+          </>
+        )}
+      </Toolbar>
+    </AppBar>
   )
 }
 

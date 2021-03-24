@@ -1,29 +1,46 @@
-import { NextPage, NextPageContext } from 'next'
-import { csrfToken, getSession } from 'next-auth/client'
-import { FormEvent, useState } from 'react'
+import { GetServerSideProps } from 'next'
+import { FC, FormEvent, useState } from 'react'
 import Router from 'next/router'
+import { csrfToken, getSession } from 'next-auth/client'
 import {
   TextField,
   Button,
   makeStyles,
   Container,
   Box,
-  Typography
+  Typography,
+  CircularProgress
 } from '@material-ui/core'
 
-type TSignIn = {
+interface ISignIn {
   csrfToken: string | null
+  session: boolean
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      csrfToken: await csrfToken(context),
+      session: Boolean(await getSession(context))
+    }
+  }
 }
 
 const useStyles = makeStyles({
-  field: {
-    marginTop: 20,
-    marginBottom: 20,
-    width: '25rem'
+  loading: {
+    margin: 'auto'
+  },
+  heading: {
+    marginTop: 20
+  },
+  error: {
+    marginTop: 20
   }
 })
 
-const SignIn: NextPage<TSignIn> = ({ csrfToken }): JSX.Element => {
+const SignIn: FC<ISignIn> = ({ csrfToken, session }): JSX.Element => {
+  typeof window !== 'undefined' && session && Router.push('/')
+
   const classes = useStyles()
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -43,56 +60,76 @@ const SignIn: NextPage<TSignIn> = ({ csrfToken }): JSX.Element => {
       })
       .catch((err) => console.log({ err }))
   }
-  return (
-    <div>
-      <Typography variant='h1'>Login:</Typography>
 
-      <form
-        noValidate
-        onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}
-      >
-        <TextField
-          // className={classes.field}
-          variant='outlined'
-          color='primary'
-          required
-          name='username'
-          type='text'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          label='Username'
-          error={!!loginError}
-        />
-        <TextField
-          // className={classes.field}
-          variant='outlined'
-          color='primary'
-          required
-          name='password'
-          type='text'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label='Password'
-          error={!!loginError}
-        />
-        <Button type='submit'>Sign in</Button>
-        {loginError}
-      </form>
-    </div>
+  return (
+    <>
+      {session && (
+        <Container>
+          <CircularProgress className={classes.loading} />
+        </Container>
+      )}
+      {!session && (
+        <Container>
+          <Typography variant='h3' className={classes.heading}>
+            Login:
+          </Typography>
+          <form
+            autoComplete='off'
+            onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}
+          >
+            <Box
+              margin='auto'
+              maxWidth='25rem'
+              display='flex'
+              flexDirection='column'
+            >
+              <TextField
+                margin='normal'
+                variant='outlined'
+                color='primary'
+                required
+                autoComplete='off'
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                label='Username'
+                error={!!loginError}
+                helperText={loginError}
+              />
+              <TextField
+                margin='normal'
+                variant='outlined'
+                color='primary'
+                required
+                autoComplete='off'
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                label='Password'
+                error={!!loginError}
+                helperText={loginError}
+              />
+              <Button variant='contained' color='primary' type='submit'>
+                Sign in
+              </Button>
+            </Box>
+          </form>
+        </Container>
+      )}
+    </>
   )
 }
 
-SignIn.getInitialProps = async (context: NextPageContext) => {
-  const session = await getSession(context)
-  session &&
-    context.res
-      ?.writeHead(302, 'User found', {
-        Location: `${process.env.NEXTAUTH_URL}` //? Maybe I'm wrong
-      })
-      .end()
-
-  return {
-    csrfToken: await csrfToken(context)
-  }
-}
+//SignIn.getInitialProps = async (context: NextPageContext) => {
+//    const session = await getSession(context)
+//    session &&
+//      context.res
+//        ?.writeHead(302, 'User found', {
+//          Location: `${process.env.NEXTAUTH_URL}`
+//        })
+//        .end()
+//    //- This isn't working as expected. going to frontend way {Router}
+//return {
+//csrfToken: await csrfToken(context)
+//}
+//}
 export default SignIn

@@ -3,17 +3,15 @@ import { red } from '@material-ui/core/colors'
 
 const theme: Theme = createMuiTheme({
   palette: {
-    primary: {
-      main: '#556cd6'
-    },
-    secondary: {
-      main: '#19857b'
-    },
-    error: {
-      main: red.A400
-    },
     background: {
-      default: '#fff'
+      default: '#ffffff'
+    }
+  },
+  overrides: {
+    MuiButton: {
+      text: {
+        color: 'white'
+      }
     }
   }
 })
