@@ -1,26 +1,34 @@
-import { AppProps } from 'next/app'
 import '../Styles/global.css'
-import { Provider, Session } from 'next-auth/client'
-import { ReactElement, useEffect } from 'react'
-import { CssBaseline, ThemeProvider } from '@material-ui/core'
-import theme from '../utils/theme'
-import { Layout } from '../Components'
+
 import { NextPage } from 'next'
+import { Provider, getSession } from 'next-auth/client'
+import { AppProps } from 'next/app'
+import { ReactElement, useEffect } from 'react'
 
-interface I_app extends AppProps {
-  session?: Session | null
-}
+import { CssBaseline, ThemeProvider } from '@material-ui/core'
 
-const _app: NextPage<I_app> = ({ Component, pageProps }): ReactElement => {
+import { Layout } from '../Components'
+import theme from '../utils/theme'
+
+interface I_app extends AppProps {}
+
+const _app: NextPage<I_app> = ({
+  Component,
+  pageProps,
+  router
+}): ReactElement => {
   useEffect(() => {
     const jssStyles = document?.querySelector('#jss-server-side')
     jssStyles?.parentElement?.removeChild(jssStyles)
   }, [])
+  //  useEffect(() => {
+  //    console.log(router.query.auth)
+  //  }, [Component])
   return (
     <Provider session={pageProps.session}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Layout>
+        <Layout auth={Boolean(router.query.auth) || false}>
           <Component {...pageProps} />
         </Layout>
       </ThemeProvider>

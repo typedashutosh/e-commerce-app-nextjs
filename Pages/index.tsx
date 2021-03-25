@@ -1,4 +1,3 @@
-import Router from 'next/router'
 import { FC, ReactElement, useEffect } from 'react'
 
 interface Iindex {}

@@ -68,7 +68,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       pages: {
         signIn: '/signin',
-        newUser: '/',
         error: '/signin'
         // signOut: '/signout'
       }

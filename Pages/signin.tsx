@@ -1,15 +1,16 @@
 import { GetServerSideProps } from 'next'
-import { FC, FormEvent, useState } from 'react'
-import Router from 'next/router'
 import { csrfToken, getSession } from 'next-auth/client'
+import Router from 'next/router'
+import { FC, FormEvent, useState } from 'react'
+
 import {
-  TextField,
-  Button,
-  makeStyles,
-  Container,
   Box,
-  Typography,
-  CircularProgress
+  Button,
+  CircularProgress,
+  Container,
+  makeStyles,
+  TextField,
+  Typography
 } from '@material-ui/core'
 
 interface ISignIn {
@@ -39,7 +40,7 @@ const useStyles = makeStyles({
 })
 
 const SignIn: FC<ISignIn> = ({ csrfToken, session }): JSX.Element => {
-  typeof window !== 'undefined' && session && Router.push('/')
+  typeof window !== 'undefined' && session && Router.push('/?auth=true', '/')
 
   const classes = useStyles()
   const [username, setUsername] = useState<string>('')
@@ -56,7 +57,7 @@ const SignIn: FC<ISignIn> = ({ csrfToken, session }): JSX.Element => {
     })
       .then((res) => {
         if (res.url.includes('?error=')) setLoginError('Bad credentials')
-        else Router.push(res.url)
+        else Router.push(`${res.url}?auth=true`, res.url)
       })
       .catch((err) => console.log({ err }))
   }

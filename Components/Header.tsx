@@ -1,18 +1,19 @@
-import { FC, ReactElement } from 'react'
+import { signOut, Session } from 'next-auth/client'
+import Link from 'next/link'
+import { FC, ReactElement, useEffect } from 'react'
+
 import {
   AppBar,
-  IconButton,
-  Toolbar,
-  Typography,
   Button,
-  makeStyles
+  IconButton,
+  makeStyles,
+  Toolbar,
+  Typography
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import { signOut, Session, useSession } from 'next-auth/client'
-import Link from 'next/link'
 
 interface IHeader {
-  session?: Session | null
+  session: Session | null | undefined
 }
 
 const useStyles = makeStyles({
@@ -22,9 +23,8 @@ const useStyles = makeStyles({
   }
 })
 
-const Header: FC<IHeader> = (): ReactElement => {
+const Header: FC<IHeader> = ({ session }): ReactElement => {
   const classes = useStyles()
-  const [session, loading] = useSession()
   return (
     <AppBar position='sticky'>
       <Toolbar>
