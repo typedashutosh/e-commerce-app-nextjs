@@ -24,10 +24,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           },
           async authorize(credentials): Promise<IUser | null> {
             dbConnect()
-            const user: IUser = await UserModel.findOne({
-              username: credentials.username,
-              password: credentials.password
-            })
+            const user: IUser = await UserModel.findOne(
+              {
+                username: credentials.username,
+                password: credentials.password
+              },
+              ['firstname', 'lastname', 'username', '_id']
+            )
+            // console.log(user)
             return !!user._id ? user : null
           }
         })
@@ -56,8 +60,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           return url
         },
         async session(session, user) {
-          // console.log({ session, user })
           session.user = user
+          // console.log({ session, user })
           return session
         },
         async jwt(token, user, account, profile, isNewUser) {

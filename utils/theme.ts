@@ -1,16 +1,15 @@
 import { createMuiTheme, Theme } from '@material-ui/core/styles'
-import { red } from '@material-ui/core/colors'
+import { purple, cyan } from '@material-ui/core/colors'
 
 const theme: Theme = createMuiTheme({
   palette: {
-    background: {
-      default: '#ffffff'
-    }
+    primary: { main: purple[800], contrastText: '#ffffff' },
+    secondary: { main: cyan.A400 }
   },
   overrides: {
     MuiButton: {
       text: {
-        color: 'white'
+        color: '#ffffff'
       }
     }
   }

@@ -66,8 +66,8 @@ MyDocument.getInitialProps = async (ctx) => {
     // Styles fragment is rendered after the app and page rendering finish.
     styles: [
       ...React.Children.toArray(initialProps.styles),
-      sheets.getStyleElement()
-      //- csso.minify(String(sheets.getStyleElement())).css
+      // sheets.getStyleElement()
+      csso.minify(String(sheets.getStyleElement())).css
       //-In development it adds all the classes, we'll be seeing this is production and if found unoptimized, gzip it.
     ]
   }

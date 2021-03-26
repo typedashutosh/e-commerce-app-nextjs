@@ -7,7 +7,7 @@ import { ReactElement, useEffect } from 'react'
 
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 
-import { Layout } from '../Components'
+import Layout from '../Components/Layout'
 import theme from '../utils/theme'
 
 interface I_app extends AppProps {}
