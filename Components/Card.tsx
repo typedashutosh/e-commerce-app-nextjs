@@ -9,8 +9,12 @@ import {
   CardMedia,
   Button,
   Typography,
-  ButtonGroup
+  ButtonGroup,
+  Tooltip,
+  IconButton,
+  Box
 } from '@material-ui/core'
+import { AddShoppingCartOutlined as CartIcon } from '@material-ui/icons'
 
 interface IMediaCard {
   image: string
@@ -22,14 +26,16 @@ interface IMediaCard {
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345
+    width: 280
   },
   media: {
     height: 160
   },
-  actions: {
-    display: 'flex',
-    justifyContent: 'center'
+  tooltip: {
+    cursor: 'pointer'
+  },
+  details: {
+    marginLeft: 'auto'
   }
 })
 
@@ -63,20 +69,33 @@ const MediaCard: FC<IMediaCard> = ({
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions className={classes.actions}>
+      <CardActions>
         <ButtonGroup>
           <Button
+            size='small'
             disabled={quantity < 2}
             onClick={() => setQuantity(quantity - 1)}
           >
             -
           </Button>
-          <Button>{quantity}</Button>
-          <Button onClick={() => setQuantity(quantity + 1)}>+</Button>
+          <Button disableRipple size='small'>
+            {quantity}
+          </Button>
+          <Button size='small' onClick={() => setQuantity(quantity + 1)}>
+            +
+          </Button>
         </ButtonGroup>
-        <Button color='primary'>Add to cart</Button>
+        <Tooltip arrow title='Add to Cart' className={classes.tooltip}>
+          <IconButton
+          //todo: disabled true untill product ads to cart
+          >
+            <CartIcon color='primary' />
+          </IconButton>
+        </Tooltip>
         <Link href={href}>
-          <Button color='primary'>Details</Button>
+          <Button className={classes.details} color='primary'>
+            Details
+          </Button>
         </Link>
       </CardActions>
     </Card>
