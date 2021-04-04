@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
-import { getSession, useSession, Session } from 'next-auth/client'
+import { Session } from 'next-auth'
+import { getSession, useSession } from 'next-auth/client'
 import { FC, ReactElement, useEffect, useState } from 'react'
 import theme from '../utils/theme'
 import Footer from './Footer'

@@ -1,7 +1,8 @@
-import { FC, FormEvent, useState } from 'react'
+import { GetServerSideProps } from 'next'
 import { csrfToken, getSession } from 'next-auth/client'
 import Router from 'next/router'
-import { GetServerSideProps } from 'next'
+import { FC, FormEvent, useState } from 'react'
+
 import {
   Box,
   Button,

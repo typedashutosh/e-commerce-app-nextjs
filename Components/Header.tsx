@@ -1,15 +1,17 @@
-import { Session, signOut } from 'next-auth/client'
-import { FC, MouseEvent, ReactElement, useState } from 'react'
+import { Session } from 'next-auth'
+import { signOut } from 'next-auth/client'
 import Link from 'next/link'
+import { FC, ReactElement, useState } from 'react'
+
 import {
   AppBar,
   Badge,
   Button,
   IconButton,
   makeStyles,
-  Toolbar,
   Menu,
   MenuItem,
+  Toolbar,
   Typography
 } from '@material-ui/core'
 import {
@@ -17,7 +19,6 @@ import {
   Menu as MenuIcon,
   ShoppingCartOutlined as CartIcon
 } from '@material-ui/icons'
-import { SSL_OP_NO_COMPRESSION } from 'node:constants'
 
 interface IHeader {
   session: Session | null | undefined
@@ -33,22 +34,6 @@ const useStyles = makeStyles({
 const Header: FC<IHeader> = ({ session }): ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const options = [
-    'None',
-    'Atria',
-    'Callisto',
-    'Dione',
-    'Ganymede',
-    'Hangouts Call',
-    'Luna',
-    'Oberon',
-    'Phobos',
-    'Pyxis',
-    'Sedna',
-    'Titania',
-    'Triton',
-    'Umbriel'
-  ]
   return (
     <AppBar position='sticky'>
       <Toolbar>
@@ -68,7 +53,7 @@ const Header: FC<IHeader> = ({ session }): ReactElement => {
           }}
           startIcon={<AccountIcon style={{ color: 'white' }} />}
         >
-          {!!session && session.user.user.firstname}
+          {!!session && session.user.firstname}
           {!session && 'Account'}
         </Button>
         <Menu
