@@ -24,15 +24,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           },
           async authorize(credentials): Promise<IUser | null> {
             dbConnect()
-            const user: IUser = await UserModel.findOne(
+            const user = await UserModel.findOne(
               {
                 username: credentials.username,
                 password: credentials.password
               },
-              ['firstname', 'lastname', 'username', '_id']
+              ['id', 'firstname', 'lastname', 'username']
             )
             // console.log(user)
-            return !!user._id ? user : null
+            return !!user.id ? user : null
           }
         })
       ],
