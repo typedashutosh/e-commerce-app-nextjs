@@ -67,7 +67,7 @@ const newUser: FC<InewUser> = ({ csrfToken, session }): JSX.Element => {
               password: data.password
             })
           })
-            .then((res) => Router.push(res.url))
+            .then((res) => Router.push(`${res.url}?auth=true`, res.url))
             .catch((err) => console.log({ err }))
         } else {
           data.errors.forEach((err: any) => {

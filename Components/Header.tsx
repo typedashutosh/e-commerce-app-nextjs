@@ -1,5 +1,5 @@
 import { Session } from 'next-auth'
-import { signOut } from 'next-auth/client'
+import { signout } from 'next-auth/client'
 import Link from 'next/link'
 import { FC, ReactElement, useState } from 'react'
 
@@ -74,7 +74,7 @@ const Header: FC<IHeader> = ({ session }): ReactElement => {
               <MenuItem
                 onClick={() => {
                   setAnchorEl(null)
-                  signOut()
+                  signout()
                 }}
               >
                 Logout
