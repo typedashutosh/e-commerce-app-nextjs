@@ -2,7 +2,15 @@ import 'next-auth'
 import 'next-auth/jwt'
 
 declare module 'next-auth' {
-  export interface User {
+  interface Session {
+    user: {
+      _id: string
+      firstname: string
+      lastname: string
+      username: string
+    }
+  }
+  interface User {
     _id: string
     firstname: string
     lastname: string
@@ -10,7 +18,7 @@ declare module 'next-auth' {
   }
 }
 declare module 'next-auth/jwt' {
-  export interface JWT extends Record<string, unknown> {
+  interface JWT extends Record<string, unknown> {
     _id: string
     firstname: string
     lastname: string

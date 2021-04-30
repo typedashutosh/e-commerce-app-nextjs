@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import NextAuth, { Session, User } from 'next-auth'
+import NextAuth, { Profile, Session, User } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import Providers from 'next-auth/providers'
-import { WithAdditionalParams } from 'next-auth/_utils'
 import UserModel from '../../../Models/User.model'
 import dbConnect from '../../../utils/dbConnect'
 
@@ -44,7 +43,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         })
       ],
       //database: undefined,
-      //secret: process.env.SECRET,
+      secret: process.env.SECRET,
       session: {
         jwt: true,
         maxAge: 30 * 24 * 60 * 60,
@@ -58,26 +57,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         encryptionKey: process.env.JWT_ENCRYPTION_KEY
       },
       callbacks: {
-        signIn: async (user, account, profile): Promise<string | boolean> => {
-          //- user is returned from authorize
-          //- account is probably credential type from provider
-          //- profile is form data returned from client
-
-          // console.log('signin here:::', { user, account, profile })
+        signIn: async (user: User): Promise<string | boolean> => {
           return !!user
         },
         redirect: async (url, baseUrl) => {
-          //- url is previous url
-          //- baseUrl is base URL,  homepage?
-
-          // console.log({ url, baseUrl })
           return url.startsWith(baseUrl) ? url : baseUrl
         },
         session: async (
           session: Session,
           userOrToken: User | JWT
-        ): Promise<WithAdditionalParams<Session>> => {
-          const returnSession: WithAdditionalParams<Session> = {
+        ): Promise<Session> => {
+          const returnSession = {
             expires: session.expires,
             user: {
               _id: userOrToken._id,
@@ -87,23 +77,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             },
             accessToken: session.accessToken
           }
-          // console.log({ session, user })
           return returnSession
         },
-        jwt: async (
-          token: JWT,
-          user: User,
-          account: Record<string, unknown>,
-          profile: Record<string, unknown>,
-          isNewUser: boolean
-        ): Promise<WithAdditionalParams<JWT>> => {
-          //-   token: this is jwt token,
-          //-   user: user returned from authorize ,
-          //-   account: type of account, here credentials
-          //?   profile: this is equal to user. I wonder why?
-          //-   isNewUser: returns boolean
-
-          // console.log({ token, user, account, profile, isNewUser })
+        jwt: async (token: JWT, user: User): Promise<JWT> => {
           user &&
             (token = {
               _id: user._id,
