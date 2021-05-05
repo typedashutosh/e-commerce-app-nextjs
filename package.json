@@ -27,15 +27,15 @@
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.7",
     "next": "^10.2.0",
-    "next-auth": "^3.19.3",
+    "next-auth": "^3.19.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "swiper": "^6.5.8",
+    "swiper": "^6.5.9",
     "typescript": "^4.2.4"
   },
   "devDependencies": {
     "@types/csso": "^3.5.1",
-    "@types/node": "^14.14.43",
-    "@types/react": "^17.0.4"
+    "@types/node": "^14.14.44",
+    "@types/react": "^17.0.5"
   }
 }
