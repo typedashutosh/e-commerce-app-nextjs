@@ -18,7 +18,7 @@ const index: FC<Iindex> = (): ReactElement => {
     <>
       <Carousel.Skeleton />
       <Container className={classes.root}>
-        <Carousel.Slides title='Cars'>
+        <Carousel.Slides title='Cars' nav={false}>
           {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((key) => (
             <Card
               key={'Cars' + key}
@@ -30,7 +30,7 @@ const index: FC<Iindex> = (): ReactElement => {
             />
           ))}
         </Carousel.Slides>
-        <Carousel.Slides title='Electronics'>
+        <Carousel.Slides title='Electronics' nav={false}>
           {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((key) => (
             <Card
               key={'Electrinics' + key}

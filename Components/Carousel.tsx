@@ -5,6 +5,7 @@ import 'swiper/swiper-bundle.min.css'
 import { Typography, makeStyles } from '@material-ui/core'
 interface ICarousel {
   title: string
+  nav?: boolean
   children: ReactElement[]
 }
 const useStyles = makeStyles({
@@ -15,7 +16,7 @@ const useStyles = makeStyles({
 })
 SwiperCore.use([Navigation, Pagination, Autoplay])
 
-export const Slides: FC<ICarousel> = ({ title, children }): JSX.Element => {
+export const Slides: FC<ICarousel> = ({ title, nav, children }): JSX.Element => {
   const classes = useStyles()
   return (
     <>
@@ -25,7 +26,7 @@ export const Slides: FC<ICarousel> = ({ title, children }): JSX.Element => {
         slidesPerView='auto'
         spaceBetween={25}
         freeMode={true}
-        navigation
+        navigation={nav}
         pagination={{
           type: 'bullets',
           clickable: true,
